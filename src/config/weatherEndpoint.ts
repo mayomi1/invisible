@@ -1,9 +1,7 @@
-const weatherApiVariables = require('./index').weatherApi;
+import {config} from './index';
 
-const weatherApiBaseUrl = `${weatherApiVariables.host}?APPID=${weatherApiVariables.apiKey}&q=`;
+const weatherApiBaseUrl = `${config.weatherApi.host}?APPID=${config.weatherApi.apiKey}&q=`;
 
-const getWeather = (query: string | number) => {
+export const weatherApiEndpoint = (query: string | number) => {
   return `${weatherApiBaseUrl}${query}`;
 };
-
-module.exports = getWeather;

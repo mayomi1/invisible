@@ -1,25 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getArrayInput = void 0;
 const responseManager_1 = require("./libs/responseManager");
-const fetch = require('./libs/getHttp');
-const weatherApiEndpoint = require('./config/weatherEndpoint');
+const getHttp_1 = require("./libs/getHttp");
+const weatherEndpoint_1 = require("./config/weatherEndpoint");
 const getWeatherFromApi = async (query) => {
     try {
-        const weather = await fetch(weatherApiEndpoint(query));
-        // console.log(weather.data)
-        // return console.log(JSON.stringify(success(weather.data), null, ' '));
+        const weather = await getHttp_1.fetch(weatherEndpoint_1.weatherApiEndpoint(query));
         return weather.data;
     }
     catch (error) {
-        console.error(error);
+        throw new Error('City not found');
     }
 };
-const getArray = async (arrayInput) => {
+exports.getArrayInput = async (arrayInput) => {
+    if (!arrayInput)
+        return responseManager_1.failure({ message: 'Input params can not be empty' }, 400);
+    if (!Array.isArray(arrayInput))
+        return responseManager_1.failure({ message: 'Input param has to be an array of strings' }, 400);
+    if (arrayInput && arrayInput.length < 1)
+        return responseManager_1.failure({ message: 'Input array cannot be empty' }, 400);
     const allWeather = await Promise.all(arrayInput.map(async (input) => {
         return await getWeatherFromApi(input);
     }));
-    console.log('all wether', allWeather);
-    return console.log(JSON.stringify(responseManager_1.success(allWeather), null, ' '));
+    return responseManager_1.logResponse(allWeather);
+    // return success(allWeather);
 };
-getArray(['New York', 10005, 'Tokyo', 'Pluto']);
+exports.getArrayInput(['New York', 10005, 'Tokyo', 'Pluto']);
 //# sourceMappingURL=index.js.map

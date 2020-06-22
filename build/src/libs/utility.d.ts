@@ -1,2 +1,2 @@
 import { ICoordinate } from "../interface";
-export declare const getFormattedTimeFromTimeZone: (coordinate: ICoordinate) => any;
+export declare const getLocationCurrentTime: (coordinate: ICoordinate) => any;

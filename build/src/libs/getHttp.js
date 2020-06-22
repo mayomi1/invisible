@@ -1,5 +1,6 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fetch = void 0;
 const getHttp = require('axios');
-const getResource = (url) => getHttp.get(url);
-module.exports = getResource;
+exports.fetch = (url) => getHttp.get(url);
 //# sourceMappingURL=getHttp.js.map

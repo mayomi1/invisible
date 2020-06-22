@@ -1,30 +1,40 @@
-export interface IWeatherApiResponse {
-  main: any,
-  weather: any;
-  // city: string;
-  // timezone: string;
-  // time: string;
-  // weather: string;
-  // weather_desc: string;
-  // temp: string;
-  // pressure: string;
-  // humidity: string;
-  // wind_speed: string;
-  // wind_deg: string;
+export interface IConfig {
+  weatherApi: IWeatherApi
 }
 
-export interface IFormatedWeatherResponse {
-  query: string | number;
-  city: string;
-  timeZone: string;
-  currentTime: string;
-  weather: string;
-  weatherDescription: string;
-  temperature: string;
-  pressure: string;
-  humidity: string;
-  windSpeed: string;
-  windDirection: string;
+export interface IWeatherApi {
+  host: string;
+  apiKey: string | undefined;
+}
+
+export interface IWeatherApiResponse {
+  main: IMain,
+  weather: IWeather[];
+  coord: ICoordinate;
+  name: string;
+}
+
+export interface IMain {
+  temp: number;
+  feels_like: number;
+  temp_min: number;
+  temp_max: number;
+  pressure: number;
+  humidity: number;
+}
+
+export interface IWeather {
+  id: number;
+  main: string;
+  description: string;
+  icon: string;
+}
+
+export interface IFormattedWeatherResponse {
+  location: string;
+  current_time: string;
+  weather: IWeather[];
+  main: IMain;
 }
 
 export interface IResponseInfo {
@@ -35,4 +45,12 @@ export interface IResponseInfo {
 export interface ICoordinate {
   lon: number;
   lat: number;
+}
+
+export interface ISuccess extends IResponseInfo{
+  data: IFormattedWeatherResponse[]
+}
+
+export interface IFailureData {
+  message?: string;
 }

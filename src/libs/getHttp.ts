@@ -1,5 +1,3 @@
 const getHttp = require('axios');
 
-const getResource = (url: string) => getHttp.get(url);
-
-module.exports = getResource;
+export const fetch = (url: string) => getHttp.get(url);

@@ -1,47 +1,56 @@
 import {
-  IFormatedWeatherResponse,
-  IResponseInfo,
+  IFailureData,
+  IFormattedWeatherResponse,
+  IResponseInfo, ISuccess,
   IWeatherApiResponse,
 } from '../interface';
-import {getFormattedTimeFromTimeZone} from "./utility";
+import {getLocationCurrentTime} from "./utility";
 
 const formatData = (
-  weatherApiResponse: any
-): any => {
-  const arr: any = [];
-  weatherApiResponse.map((res: any) => {
-    arr.push({
+  weatherApiResponse: IWeatherApiResponse[] | undefined
+): IFormattedWeatherResponse[] => {
+  const formattedWeatherResponses: IFormattedWeatherResponse[] = [];
+  Array.isArray(weatherApiResponse) && weatherApiResponse.map((res: any) => {
+    formattedWeatherResponses.push({
       location: res.name,
-      currentTime: getFormattedTimeFromTimeZone(res.coord),
-      timezone: res.timezone,
+      current_time: getLocationCurrentTime(res.coord),
       weather: res.weather,
       main: res.main,
     })
-  })
+  });
 
-  return arr;
+  return formattedWeatherResponses;
 };
 
-const response = (data: any, responseInfo: IResponseInfo) => {
-   return {
-     httpCode: responseInfo.httpCode,
-     error: responseInfo.error,
-     data: formatData(data),
-  };
+const responseFormat = (httpCode: number, error: boolean, data: any) => {
+  return {
+    httpCode, error, data
+  }
+}
+const response = (responseInfo: IResponseInfo, data?: IWeatherApiResponse[], failedData?: IFailureData, ) => {
+  if (responseInfo.error) {
+    return responseFormat(responseInfo.httpCode, responseInfo.error, failedData)
+  } else {
+    return responseFormat(responseInfo.httpCode, responseInfo.error, formatData(data))
+  }
 };
 
-export const success = (data: any[], httpCode = 200) => {
+export const success = (data: IWeatherApiResponse[], httpCode = 200): ISuccess => {
   const responseInfo: IResponseInfo = {
     error: false,
     httpCode: httpCode,
   };
-  return response(data, responseInfo);
+  return response(responseInfo, data);
 };
 
-export const failure = (data: IWeatherApiResponse, httpCode = 503) => {
+export const failure = (data: IFailureData, httpCode = 503) => {
   const responseInfo: IResponseInfo = {
     error: true,
     httpCode: httpCode,
   };
-  return response(data, responseInfo);
+  return response(responseInfo, undefined, data);
 };
+
+export const logResponse = (res: IWeatherApiResponse[]) => {
+  return console.log(JSON.stringify(success(res), null, ' '));
+}

@@ -1,39 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.failure = exports.success = void 0;
+exports.logResponse = exports.failure = exports.success = void 0;
 const utility_1 = require("./utility");
 const formatData = (weatherApiResponse) => {
-    const arr = [];
-    weatherApiResponse.map((res) => {
-        arr.push({
+    const formattedWeatherResponses = [];
+    Array.isArray(weatherApiResponse) && weatherApiResponse.map((res) => {
+        formattedWeatherResponses.push({
             location: res.name,
-            currentTime: utility_1.getFormattedTimeFromTimeZone(res.coord),
-            timezone: res.timezone,
+            current_time: utility_1.getLocationCurrentTime(res.coord),
             weather: res.weather,
             main: res.main,
         });
     });
-    return arr;
+    return formattedWeatherResponses;
 };
-const response = (data, responseInfo) => {
+const responseFormat = (httpCode, error, data) => {
     return {
-        httpCode: responseInfo.httpCode,
-        error: responseInfo.error,
-        data: formatData(data),
+        httpCode, error, data
     };
+};
+const response = (responseInfo, data, failedData) => {
+    if (responseInfo.error) {
+        return responseFormat(responseInfo.httpCode, responseInfo.error, failedData);
+    }
+    else {
+        return responseFormat(responseInfo.httpCode, responseInfo.error, formatData(data));
+    }
 };
 exports.success = (data, httpCode = 200) => {
     const responseInfo = {
         error: false,
         httpCode: httpCode,
     };
-    return response(data, responseInfo);
+    return response(responseInfo, data);
 };
 exports.failure = (data, httpCode = 503) => {
     const responseInfo = {
         error: true,
         httpCode: httpCode,
     };
-    return response(data, responseInfo);
+    return response(responseInfo, undefined, data);
+};
+exports.logResponse = (res) => {
+    return console.log(JSON.stringify(exports.success(res), null, ' '));
 };
 //# sourceMappingURL=responseManager.js.map

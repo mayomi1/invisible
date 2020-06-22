@@ -1,2 +1,1 @@
-declare const getHttp: any;
-declare const getResource: (url: string) => any;
+export declare const fetch: (url: string) => any;
