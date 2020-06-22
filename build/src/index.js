@@ -6,16 +6,20 @@ const weatherApiEndpoint = require('./config/weatherEndpoint');
 const getWeatherFromApi = async (query) => {
     try {
         const weather = await fetch(weatherApiEndpoint(query));
-        return console.log(JSON.stringify(responseManager_1.success(weather.data), null, ' '));
+        // console.log(weather.data)
+        // return console.log(JSON.stringify(success(weather.data), null, ' '));
+        return weather.data;
     }
     catch (error) {
         console.error(error);
     }
 };
 const getArray = async (arrayInput) => {
-    arrayInput.map(input => {
-        getWeatherFromApi(input);
-    });
+    const allWeather = await Promise.all(arrayInput.map(async (input) => {
+        return await getWeatherFromApi(input);
+    }));
+    console.log('all wether', allWeather);
+    return console.log(JSON.stringify(responseManager_1.success(allWeather), null, ' '));
 };
-getArray(['Lagos', 'Ife']);
+getArray(['New York', 10005, 'Tokyo', 'Pluto']);
 //# sourceMappingURL=index.js.map

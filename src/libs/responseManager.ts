@@ -3,27 +3,34 @@ import {
   IResponseInfo,
   IWeatherApiResponse,
 } from '../interface';
+import {getFormattedTimeFromTimeZone} from "./utility";
 
 const formatData = (
   weatherApiResponse: any
 ): any => {
-  return {
-    weather: weatherApiResponse.weather,
-    main: weatherApiResponse.main,
-    timezone: weatherApiResponse.main.timezone,
-    location: weatherApiResponse.main.name,
+  const arr: any = [];
+  weatherApiResponse.map((res: any) => {
+    arr.push({
+      location: res.name,
+      currentTime: getFormattedTimeFromTimeZone(res.coord),
+      timezone: res.timezone,
+      weather: res.weather,
+      main: res.main,
+    })
+  })
+
+  return arr;
+};
+
+const response = (data: any, responseInfo: IResponseInfo) => {
+   return {
+     httpCode: responseInfo.httpCode,
+     error: responseInfo.error,
+     data: formatData(data),
   };
 };
 
-const response = (data: IWeatherApiResponse, responseInfo: IResponseInfo) => {
-  return {
-    error: responseInfo.error,
-    data: formatData(data),
-    httpCode: data.main.cod,
-  };
-};
-
-export const success = (data: IWeatherApiResponse, httpCode = 200) => {
+export const success = (data: any[], httpCode = 200) => {
   const responseInfo: IResponseInfo = {
     error: false,
     httpCode: httpCode,

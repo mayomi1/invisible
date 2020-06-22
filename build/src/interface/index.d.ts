@@ -19,3 +19,7 @@ export interface IResponseInfo {
     error: boolean;
     httpCode: number;
 }
+export interface ICoordinate {
+    lon: number;
+    lat: number;
+}

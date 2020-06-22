@@ -1,19 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.failure = exports.success = void 0;
+const utility_1 = require("./utility");
 const formatData = (weatherApiResponse) => {
-    return {
-        weather: weatherApiResponse.weather,
-        main: weatherApiResponse.main,
-        timezone: weatherApiResponse.main.timezone,
-        location: weatherApiResponse.main.name,
-    };
+    const arr = [];
+    weatherApiResponse.map((res) => {
+        arr.push({
+            location: res.name,
+            currentTime: utility_1.getFormattedTimeFromTimeZone(res.coord),
+            timezone: res.timezone,
+            weather: res.weather,
+            main: res.main,
+        });
+    });
+    return arr;
 };
 const response = (data, responseInfo) => {
     return {
+        httpCode: responseInfo.httpCode,
         error: responseInfo.error,
         data: formatData(data),
-        httpCode: data.main.cod,
     };
 };
 exports.success = (data, httpCode = 200) => {

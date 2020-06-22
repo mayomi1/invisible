@@ -1,5 +1,14 @@
-const momentTimezone = require('moment-timezone');
+import {ICoordinate} from "../interface";
 
-export const getFormattedTimeFromTimeZone = (timezone: string) => {
-  return momentTimezone().tz(timezone).format('MMMM Do YYYY, h:mm:ss a');
+const momentTimezone = require('moment-timezone');
+const geoTz = require('geo-tz');
+
+const getTimeZoneFromGeolocation = (lat: number, lng: number) => {
+  return geoTz(lat, lng)[0];
 };
+
+export const getFormattedTimeFromTimeZone = (coordinate: ICoordinate) => {
+  const timeZone = getTimeZoneFromGeolocation(coordinate.lat, coordinate.lon);
+  return momentTimezone().tz(timeZone).format('MMMM Do YYYY, h:mm:ss a');
+};
+
