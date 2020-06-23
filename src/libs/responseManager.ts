@@ -2,41 +2,60 @@ import {
   IFailure,
   IFailureData,
   IFormattedWeatherResponse,
-  IResponseInfo, ISuccess,
+  IResponseInfo,
+  ISuccess,
   IWeatherApiResponse,
 } from '../interface';
-import {getLocationCurrentTime} from "./utility";
+import {getLocationCurrentTime} from './utility';
 
 const formatData = (
   weatherApiResponse: IWeatherApiResponse[] | undefined
 ): IFormattedWeatherResponse[] => {
   const formattedWeatherResponses: IFormattedWeatherResponse[] = [];
-  Array.isArray(weatherApiResponse) && weatherApiResponse.map((res: any) => {
-    formattedWeatherResponses.push({
-      location: res.name,
-      current_time: getLocationCurrentTime(res.coord),
-      weather: res.weather,
-      main: res.main,
-    })
-  });
+  Array.isArray(weatherApiResponse) &&
+    weatherApiResponse.map((res: any) => {
+      formattedWeatherResponses.push({
+        location: res.name,
+        current_time: getLocationCurrentTime(res.coord),
+        weather: res.weather,
+        main: res.main,
+      });
+    });
 
   return formattedWeatherResponses;
 };
 
 const responseFormat = (httpCode: number, error: boolean, data: any) => {
   return {
-    httpCode, error, data
-  }
-}
-const response = (responseInfo: IResponseInfo, data?: IWeatherApiResponse[], failedData?: IFailureData, ) => {
+    httpCode,
+    error,
+    data,
+  };
+};
+const response = (
+  responseInfo: IResponseInfo,
+  data?: IWeatherApiResponse[],
+  failedData?: IFailureData
+) => {
   if (responseInfo.error) {
-    return responseFormat(responseInfo.httpCode, responseInfo.error, failedData)
+    return responseFormat(
+      responseInfo.httpCode,
+      responseInfo.error,
+      failedData
+    );
   } else {
-    return responseFormat(responseInfo.httpCode, responseInfo.error, formatData(data))
+    return responseFormat(
+      responseInfo.httpCode,
+      responseInfo.error,
+      formatData(data)
+    );
   }
 };
 
-export const success = (data: IWeatherApiResponse[], httpCode = 200): ISuccess => {
+export const success = (
+  data: IWeatherApiResponse[],
+  httpCode = 200
+): ISuccess => {
   const responseInfo: IResponseInfo = {
     error: false,
     httpCode: httpCode,
@@ -52,6 +71,8 @@ export const failure = (data: IFailureData, httpCode = 503): IFailure => {
   return response(responseInfo, undefined, data);
 };
 
-export const logResponse = async (getArrayInput: Promise<IFailure | ISuccess>) => {
-  return console.log(JSON.stringify( await getArrayInput, null, ' '));
-}
+export const logResponse = async (
+  getArrayInput: Promise<IFailure | ISuccess>
+) => {
+  return console.log(JSON.stringify(await getArrayInput, null, ' '));
+};

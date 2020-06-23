@@ -1,4 +1,4 @@
-import {ICoordinate} from "../interface";
+import {ICoordinate} from '../interface';
 const momentTimezone = require('moment-timezone');
 const geoTz = require('geo-tz');
 

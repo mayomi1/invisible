@@ -1,5 +1,5 @@
 export interface IConfig {
-  weatherApi: IWeatherApi
+  weatherApi: IWeatherApi;
 }
 
 export interface IWeatherApi {
@@ -8,7 +8,7 @@ export interface IWeatherApi {
 }
 
 export interface IWeatherApiResponse {
-  main: IMain,
+  main: IMain;
   weather: IWeather[];
   coord: ICoordinate;
   name: string;
@@ -47,14 +47,14 @@ export interface ICoordinate {
   lat: number;
 }
 
-export interface ISuccess extends IResponseInfo{
-  data: IFormattedWeatherResponse[]
+export interface ISuccess extends IResponseInfo {
+  data: IFormattedWeatherResponse[];
 }
 
 export interface IFailureData {
   message?: string;
 }
 
-export interface IFailure extends IResponseInfo{
-  data: IFailureData
+export interface IFailure extends IResponseInfo {
+  data: IFailureData;
 }

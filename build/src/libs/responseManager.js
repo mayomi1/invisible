@@ -4,19 +4,22 @@ exports.logResponse = exports.failure = exports.success = void 0;
 const utility_1 = require("./utility");
 const formatData = (weatherApiResponse) => {
     const formattedWeatherResponses = [];
-    Array.isArray(weatherApiResponse) && weatherApiResponse.map((res) => {
-        formattedWeatherResponses.push({
-            location: res.name,
-            current_time: utility_1.getLocationCurrentTime(res.coord),
-            weather: res.weather,
-            main: res.main,
+    Array.isArray(weatherApiResponse) &&
+        weatherApiResponse.map((res) => {
+            formattedWeatherResponses.push({
+                location: res.name,
+                current_time: utility_1.getLocationCurrentTime(res.coord),
+                weather: res.weather,
+                main: res.main,
+            });
         });
-    });
     return formattedWeatherResponses;
 };
 const responseFormat = (httpCode, error, data) => {
     return {
-        httpCode, error, data
+        httpCode,
+        error,
+        data,
     };
 };
 const response = (responseInfo, data, failedData) => {

@@ -13,10 +13,8 @@
     "start": "node build/src/index.js",
     "test": "mocha build/src/test/test.js --timeout 10000",
     "dev": "npm run compile && npm start",
-    "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc",
-    "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile"
   },
