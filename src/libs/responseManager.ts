@@ -1,4 +1,5 @@
 import {
+  IFailure,
   IFailureData,
   IFormattedWeatherResponse,
   IResponseInfo, ISuccess,
@@ -43,7 +44,7 @@ export const success = (data: IWeatherApiResponse[], httpCode = 200): ISuccess =
   return response(responseInfo, data);
 };
 
-export const failure = (data: IFailureData, httpCode = 503) => {
+export const failure = (data: IFailureData, httpCode = 503): IFailure => {
   const responseInfo: IResponseInfo = {
     error: true,
     httpCode: httpCode,
@@ -51,6 +52,6 @@ export const failure = (data: IFailureData, httpCode = 503) => {
   return response(responseInfo, undefined, data);
 };
 
-export const logResponse = (res: IWeatherApiResponse[]) => {
-  return console.log(JSON.stringify(success(res), null, ' '));
+export const logResponse = async (getArrayInput: Promise<IFailure | ISuccess>) => {
+  return console.log(JSON.stringify( await getArrayInput, null, ' '));
 }

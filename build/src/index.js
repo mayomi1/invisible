@@ -10,7 +10,7 @@ const getWeatherFromApi = async (query) => {
         return weather.data;
     }
     catch (error) {
-        throw new Error('City not found');
+        throw error;
     }
 };
 exports.getArrayInput = async (arrayInput) => {
@@ -20,11 +20,15 @@ exports.getArrayInput = async (arrayInput) => {
         return responseManager_1.failure({ message: 'Input param has to be an array of strings' }, 400);
     if (arrayInput && arrayInput.length < 1)
         return responseManager_1.failure({ message: 'Input array cannot be empty' }, 400);
-    const allWeather = await Promise.all(arrayInput.map(async (input) => {
-        return await getWeatherFromApi(input);
-    }));
-    return responseManager_1.logResponse(allWeather);
-    // return success(allWeather);
+    try {
+        const allWeather = await Promise.all(arrayInput.map(async (input) => {
+            return await getWeatherFromApi(input);
+        }));
+        return responseManager_1.success(allWeather);
+    }
+    catch (error) {
+        return responseManager_1.failure({ message: 'City not found' }, 404);
+    }
 };
-exports.getArrayInput(['New York', 10005, 'Tokyo', 'Pluto']);
+responseManager_1.logResponse(exports.getArrayInput(['New York', 10005, 'Tokyo', 'Pluto']));
 //# sourceMappingURL=index.js.map

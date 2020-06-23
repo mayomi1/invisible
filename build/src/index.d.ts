@@ -1,5 +1,1 @@
-export declare const getArrayInput: (arrayInput?: (string | number)[] | undefined) => Promise<void | {
-    httpCode: number;
-    error: boolean;
-    data: any;
-}>;
+export declare const getArrayInput: (arrayInput?: (string | number)[] | undefined) => Promise<import("./interface").ISuccess | import("./interface").IFailure>;

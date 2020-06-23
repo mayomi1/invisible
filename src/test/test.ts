@@ -1,13 +1,11 @@
-const {getArrayInput} = require("../../build/src");
+import {IFailure, IResponseInfo, ISuccess} from "../interface";
+
+const {getArrayInput} = require("../../src");
 
 const chai = require('chai');
 const expect = chai.expect;
 
 describe('Get weather and time', () => {
-  it('should return weather', async () => {
-    // const response = await getArrayInput('')
-  });
-
   it('should return an error if the input is not an array', async () => {
     let response = await getArrayInput('sds')
     expect(response).to.exist
@@ -39,34 +37,34 @@ describe('Get weather and time', () => {
   });
 
   it('should return an array of current time and weather', async (done) => {
-    const keys = ['london', 'lagos']
+    const keys = ['New York', 10005]
 
-    return new Promise(async (resolve, reject) => {
-      try {
-        const response = await getArrayInput(keys);
-        expect(response).to.exist
-        expect(response).to.be.an('object')
-        expect(response).to.have.property('data')
-        expect(response.data).to.be.an('array')
-        // expect(response.data[0]).to.be.an('object')
-        // expect(response.data[0]).to.have.property('location')
-        // expect(response.data[0]).to.have.property('current_time')
-        // expect(response.data[0]).to.have.property('weather')
-        // expect(response.data[0]).to.have.property('main')
-        resolve(response);
-        done()
-      } catch (error) {
-        done(error)
-      }
-    })
-
-
+    return new Promise( (resolve) => {
+      getArrayInput(keys)
+        .then((result: ISuccess) => {
+          expect(result).to.exist;
+          expect(result).to.be.an('object');
+          expect(result).to.have.property('data');
+          expect(result.data).to.be.an('array');
+          expect(result.data[0]).to.be.an('object');
+          expect(result.data[0]).to.have.property('location');
+          expect(result.data[0]).to.have.property('current_time');
+          expect(result.data[0]).to.have.property('weather');
+          expect(result.data[0]).to.have.property('main');
+          resolve();
+        });
+      done()
+    });
   });
 
-  it('should return error is city or zip code is not correct', async () => {
-    let response = await getArrayInput(['32323llw']);
-    expect(response).to.exist
-    expect(response).to.throw(new Error('City not found'));
-    done();
+  it('should return error is city or zip code is not correct', async (done) => {
+    return new Promise( (resolve) => {
+      getArrayInput(['32323llw']).then((result: IFailure) => {
+        expect(result).to.have.property('error');
+        expect(result.httpCode).to.equal(404)
+        resolve();
+      })
+      done()
+    });
   });
 })

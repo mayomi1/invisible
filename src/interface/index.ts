@@ -54,3 +54,7 @@ export interface ISuccess extends IResponseInfo{
 export interface IFailureData {
   message?: string;
 }
+
+export interface IFailure extends IResponseInfo{
+  data: IFailureData
+}

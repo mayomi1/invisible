@@ -41,7 +41,7 @@ exports.failure = (data, httpCode = 503) => {
     };
     return response(responseInfo, undefined, data);
 };
-exports.logResponse = (res) => {
-    return console.log(JSON.stringify(exports.success(res), null, ' '));
+exports.logResponse = async (getArrayInput) => {
+    return console.log(JSON.stringify(await getArrayInput, null, ' '));
 };
 //# sourceMappingURL=responseManager.js.map
